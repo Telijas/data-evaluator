@@ -1,0 +1,5 @@
+!#/bin/bash
+
+## Call the versioned Linux commit hook
+chmod u+x ./githooks/pre-commit-linux.sh
+./githooks/pre-commit-linux.sh
