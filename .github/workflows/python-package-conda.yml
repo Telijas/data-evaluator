@@ -21,8 +21,11 @@ jobs:
           echo $CONDA/bin
       - name: Install dependencies
         run: |
+          cat /home/runner/.bashrc
           conda init
+          cat /home/runner/.bashrc
           source /home/runner/.bashrc
+          /home/runner/.bashrc
           conda env create --file=./env/conda-env.yaml
           conda activate data-evaluator
       - name: Lint with flake8
