@@ -25,7 +25,7 @@ jobs:
           conda init
           cat /home/runner/.bashrc
           source /home/runner/.bashrc
-          /home/runner/.bashrc
+          export PATH="/usr/share/miniconda/bin:$PATH"
           conda env create --file=./env/conda-env.yaml
           conda activate data-evaluator
       - name: Lint with flake8
