@@ -16,6 +16,7 @@ def main():
             symbol_stock_data = data_extract.extract_market_data(symbol, date, 10, 10)
             stock_data = pd.concat([stock_data, symbol_stock_data])
 
+    # print(stock_data.to_string())
     print(stock_data)
     print("done")
 

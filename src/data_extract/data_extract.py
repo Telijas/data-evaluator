@@ -32,7 +32,17 @@ def extract_market_data(symbol: str, date: datetime, day_records_negative: int,
 
 
 def get_SP500_entry_symbol_and_date() -> dict:
-    result = {"CAT": datetime(1963, 2, 1),
-              "AAPL": datetime(2024, 2, 1)
+    result = {"TPL": datetime(2024, 11, 26),
+              "AMTM": datetime(2024, 9, 30),
+              "ERIE": datetime(2024, 9, 23),
+              "DELL": datetime(2024, 9, 23),
+              "PLTR": datetime(2024, 9, 23),
+              "SW": datetime(2024, 7, 8),
+              "GDDY": datetime(2024, 6, 24),
+              "CRWD": datetime(2024, 6, 24),
+              "KKR": datetime(2024, 6, 24),
+              "VST": datetime(2024, 5, 8),
+              "SOLV": datetime(2024, 4, 3),
+              "GEV": datetime(2024, 4, 3)
               }
     return result
