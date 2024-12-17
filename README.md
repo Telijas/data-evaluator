@@ -4,7 +4,7 @@ This repo is dedicated to evaluate the data gathered in https://github.com/dtros
 
 # Developer setup
 ## Python setup
-Install anaconda.<br/>
+Install Anaconda3.<br/>
 Create an anaconda environment `conda create -n data-evaluator python=3.11` so the packages will be encapsulated for this project and do not interfere with other Python projects.
 
 ## IDE Setup (Pycharm)
