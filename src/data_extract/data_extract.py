@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 import pandas as pd
 import psycopg2
+import matplotlib.pyplot as plt
 
 
 def extract_market_data(symbol: str, date: datetime, day_records_negative: int,
@@ -27,6 +28,21 @@ def extract_market_data(symbol: str, date: datetime, day_records_negative: int,
     df['offset'] = df.index - reference_index
     df = df[(-1) * day_records_negative <= df['offset']]
     df = df[df['offset'] <= day_records_positive]
+    reference_value_stock_price = df.loc[reference_index, 'stock_price']
+    df['stock_price_rel'] = (df['stock_price'] / reference_value_stock_price - 1) * 100
+    reference_value_stock_traded = df.loc[reference_index, 'stock_traded']
+    df['stock_traded_rel'] = (df['stock_traded'] / reference_value_stock_traded - 1) * 100
+    # plt.figure(figsize=(8, 6))
+    # plt.plot(df['offset'], df['stock_price_rel'], marker='o', linestyle='-', label=symbol)
+    # plt.xlabel("Offset")
+    # plt.ylabel("Relative Change")
+    # plt.title("Relative Change vs Offset")
+    # plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add a horizontal line at y=0
+    # plt.grid(True)
+    # plt.legend()
+
+    # Show the plot
+    # plt.show()
     # print(df)
     return df
 
