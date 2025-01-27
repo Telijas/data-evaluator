@@ -22,3 +22,8 @@ with open(file_path, mode='r', newline='', encoding='utf-8') as csvfile:
         movements.extend([(date, symbol, "REMOVED") for symbol in removed_symbols])
 
 print("found movements: ", len(movements))
+sql = "INSERT INTO public.sp500_changes (symbol, business_date, \"action\") VALUES "
+for (date, symbol, action) in movements:
+    sql = sql + f"('{symbol}', '{date}', '{action}'), "
+# copy and paste the command into your db manager and replace the last comma with a semicolon.
+print(sql)
