@@ -19,8 +19,6 @@ def main():
             symbol_stock_data = data_extract.extract_market_data(symbol, date, date_range, date_range)
             stock_data = pd.concat([stock_data, symbol_stock_data])
 
-    # print(stock_data.to_string())
-    # print(stock_data)
     # Group by symbol
     grouped = stock_data.groupby('symbol')
     for symbol, group in grouped:
@@ -50,5 +48,6 @@ if __name__ == "__main__":
     main()
 
 # if __name__ == "__main__":
-#     sp500_list = data_extract.get_most_recent_sp500_entering_date('A')
+#     # sp500_list = data_extract.get_master_data_eligible_symbols()
+#     sp500_list = data_extract.get_market_data(['A', 'AA'], datetime(2025, 2, 1))
 #     print(sp500_list)
