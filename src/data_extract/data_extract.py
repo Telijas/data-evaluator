@@ -106,7 +106,7 @@ def get_market_data(symbols: list[str], end_date: datetime, past_month_included=
     connection = _get_connection()
     formatted_symbols = ", ".join(f"'{item}'" for item in symbols)
     # date_string =
-    query = f"SELECT      symbol,     year_month,     SUM(order_amount) AS total_order_amount,     SUM(stock_traded) AS total_stock_traded,     MIN(market_capitalization) as min_market_capitalization FROM public.market_data WHERE year_month >= (     EXTRACT(YEAR FROM DATE '{end_date}' - INTERVAL '{past_month_included} months') * 100 +       EXTRACT(MONTH FROM DATE '{end_date}' - INTERVAL '{past_month_included} months') ) and year_month <= (     EXTRACT(YEAR FROM DATE '{end_date}') * 100 +  EXTRACT(MONTH FROM DATE '{end_date}' ) ) and symbol in ({formatted_symbols}) GROUP BY symbol, year_month ORDER BY symbol, year_month;"
+    query = f"SELECT symbol, year_month, SUM(order_amount) AS total_order_amount,     SUM(stock_traded) AS total_stock_traded,     MIN(market_capitalization) as min_market_capitalization FROM public.market_data WHERE year_month >= (     EXTRACT(YEAR FROM DATE '{end_date}' - INTERVAL '{past_month_included} months') * 100 +       EXTRACT(MONTH FROM DATE '{end_date}' - INTERVAL '{past_month_included} months') ) and year_month <= (     EXTRACT(YEAR FROM DATE '{end_date}') * 100 +  EXTRACT(MONTH FROM DATE '{end_date}' ) ) and symbol in ({formatted_symbols}) GROUP BY symbol, year_month ORDER BY symbol, year_month;"
     cursor = connection.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
