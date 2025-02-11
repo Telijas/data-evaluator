@@ -76,6 +76,7 @@ def get_current_sp500_list(date: datetime) -> list[str]:
     cursor = connection.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
+    connection.close()
     return [str(tup[0]) for tup in rows]
 
 
@@ -85,6 +86,7 @@ def get_most_recent_sp500_entering_date(symbol: str) -> Optional[datetime]:
     cursor = connection.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
+    connection.close()
     if len(rows) == 0:
         return None
     return rows[0][0]
@@ -96,6 +98,7 @@ def get_master_data_eligible_symbols() -> list[str]:
     cursor = connection.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
+    connection.close()
     return [str(tup[0]) for tup in rows]
 
 
@@ -103,10 +106,11 @@ def get_market_data(symbols: list[str], end_date: datetime, past_month_included=
     connection = _get_connection()
     formatted_symbols = ", ".join(f"'{item}'" for item in symbols)
     # date_string =
-    query = f"SELECT      symbol,     year_month,     SUM(order_amount) AS total_order_amount,     SUM(stock_traded) AS total_stock_traded,     SUM(market_capitalization) as total_market_capitalization FROM public.market_data WHERE year_month >= (     EXTRACT(YEAR FROM DATE '{end_date}' - INTERVAL '{past_month_included} months') * 100 +       EXTRACT(MONTH FROM CURRENT_DATE - INTERVAL '{past_month_included} months') ) and symbol in ({formatted_symbols}) GROUP BY symbol, year_month ORDER BY symbol, year_month;"
+    query = f"SELECT      symbol,     year_month,     SUM(order_amount) AS total_order_amount,     SUM(stock_traded) AS total_stock_traded,     MIN(market_capitalization) as min_market_capitalization FROM public.market_data WHERE year_month >= (     EXTRACT(YEAR FROM DATE '{end_date}' - INTERVAL '{past_month_included} months') * 100 +       EXTRACT(MONTH FROM DATE '{end_date}' - INTERVAL '{past_month_included} months') ) and year_month <= (     EXTRACT(YEAR FROM DATE '{end_date}') * 100 +  EXTRACT(MONTH FROM DATE '{end_date}' ) ) and symbol in ({formatted_symbols}) GROUP BY symbol, year_month ORDER BY symbol, year_month;"
     cursor = connection.cursor()
     cursor.execute(query)
     rows = cursor.fetchall()
+    connection.close()
 
     column_names = [desc[0] for desc in cursor.description]
     df = pd.DataFrame(rows, columns=column_names)

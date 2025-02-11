@@ -1,6 +1,7 @@
 import pandas as pd
 import psycopg2
 import data_extract.data_extract as data_extract
+import evaluation.preprocessing as preprocessing
 from datetime import datetime
 import matplotlib.pyplot as plt
 
@@ -44,10 +45,10 @@ def main():
     print("done")
 
 
-if __name__ == "__main__":
-    main()
-
 # if __name__ == "__main__":
-#     # sp500_list = data_extract.get_master_data_eligible_symbols()
-#     sp500_list = data_extract.get_market_data(['A', 'AA'], datetime(2025, 2, 1))
-#     print(sp500_list)
+#     main()
+
+if __name__ == "__main__":
+    sp500_list = data_extract.get_market_data(['ACN', 'ABC', 'ACV', 'AAPL'], datetime(2024, 11, 1))
+    sp500_list = preprocessing.filter_symbols_by_market_capitalization(sp500_list)
+    print(sp500_list.to_string())
