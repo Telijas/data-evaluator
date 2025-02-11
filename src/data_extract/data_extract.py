@@ -1,18 +1,20 @@
 from datetime import datetime, timedelta
+from typing import Optional
+
 import pandas as pd
 import psycopg2
 import matplotlib.pyplot as plt
 
+host = "localhost"
+database = "collector"
+user = "postgres"
+password = "password"
+port = 6543
+
 
 def extract_market_data(symbol: str, date: datetime, day_records_negative: int,
                         day_records_positive: int) -> pd.DataFrame:
-    connection = psycopg2.connect(
-        host="localhost",
-        database="collector",
-        user="postgres",
-        password="password",
-        port=6543
-    )
+    connection = _get_connection()
     upper_date = (date + timedelta(int(day_records_positive * (7 / 5) + 10))).strftime('%Y-%m-%d')
     lower_date = (date - timedelta(int(day_records_negative * (7 / 5) + 10))).strftime('%Y-%m-%d')
     query = f"SELECT * FROM market_data where '{lower_date}' <= business_date and  business_date <= '{upper_date}' and symbol = '{symbol}' order by business_date"
@@ -32,19 +34,18 @@ def extract_market_data(symbol: str, date: datetime, day_records_negative: int,
     df['stock_price_rel'] = (df['stock_price'] / reference_value_stock_price - 1) * 100
     reference_value_stock_traded = df.loc[reference_index, 'stock_traded']
     df['stock_traded_rel'] = (df['stock_traded'] / reference_value_stock_traded - 1) * 100
-    # plt.figure(figsize=(8, 6))
-    # plt.plot(df['offset'], df['stock_price_rel'], marker='o', linestyle='-', label=symbol)
-    # plt.xlabel("Offset")
-    # plt.ylabel("Relative Change")
-    # plt.title("Relative Change vs Offset")
-    # plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add a horizontal line at y=0
-    # plt.grid(True)
-    # plt.legend()
-
-    # Show the plot
-    # plt.show()
-    # print(df)
     return df
+
+
+def _get_connection():
+    connection = psycopg2.connect(
+        host=host,
+        database=database,
+        user=user,
+        password=password,
+        port=port
+    )
+    return connection
 
 
 def get_SP500_entry_symbol_and_date() -> dict:
@@ -62,3 +63,28 @@ def get_SP500_entry_symbol_and_date() -> dict:
               "GEV": datetime(2024, 4, 3)
               }
     return result
+
+
+def get_current_sp500_list(date: datetime) -> list[str]:
+    """
+    Get the current list of SP500 symbols, by giving a date.
+    :param date: Date of validity for the SP500 list
+    :return: List of symbols (string)
+    """
+    connection = _get_connection()
+    query = f"select symbol from  sp500('{date}') order by symbol"
+    cursor = connection.cursor()
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    return [str(tup[0]) for tup in rows]
+
+
+def get_most_recent_sp500_entering_date(symbol: str) -> Optional[datetime]:
+    connection = _get_connection()
+    query = f"select max(sc.business_date) as business_date from sp500_changes sc where symbol = '{symbol}' and sc.\"action\" = 'ADDED';"
+    cursor = connection.cursor()
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    if len(rows) == 0:
+        return None
+    return rows[0][0]

@@ -48,3 +48,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+# if __name__ == "__main__":
+#     sp500_list = data_extract.get_most_recent_sp500_entering_date('A')
+#     print(sp500_list)
