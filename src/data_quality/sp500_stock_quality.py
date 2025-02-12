@@ -46,7 +46,7 @@ def display_sp500_quality_of_year(year: int):
     ax.set_title(f"Data availability of SP500 for year {year}")
     ax.set_xlabel("Year month")
     ax.set_ylabel("Coverage existing data")
-    ax.set_ylim(0, 1)
+    ax.set_ylim(0, 1.05)
     ax.grid(True)
     ax.legend()
     plt.show()
