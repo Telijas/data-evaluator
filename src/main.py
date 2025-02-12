@@ -57,4 +57,4 @@ if __name__ == "__main__":
     # sp500_list = data_extract.get_market_data(['ACN', 'ABC', 'ACV', 'AAPL'], datetime(2024, 11, 1))
     # sp500_list = preprocessing.filter_symbols_by_market_capitalization(sp500_list)
     # print(sp500_list.to_string())
-    sp500_stock_quality.display_quality_of_year(2024)
+    sp500_stock_quality.display_sp500_quality_of_year(2024)
