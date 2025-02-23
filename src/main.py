@@ -1,5 +1,9 @@
+from concurrent.futures import ThreadPoolExecutor
+
 import pandas as pd
 import psycopg2
+from pandas import DataFrame
+
 import data_extract.data_extract as data_extract
 import evaluation.preprocessing as preprocessing
 import data_quality.sp500_stock_quality as sp500_stock_quality
@@ -53,8 +57,9 @@ def do_show_analysis():
 # if __name__ == "__main__":
 #     main()
 
+
 if __name__ == "__main__":
-    # sp500_list = data_extract.get_market_data(['ACN', 'ABC', 'ACV', 'AAPL'], datetime(2024, 11, 1))
-    # sp500_list = preprocessing.filter_symbols_by_market_capitalization(sp500_list)
-    # print(sp500_list.to_string())
-    sp500_stock_quality.display_sp500_quality_of_year(2024)
+    # sp500_stock_quality.display_sp500_quality_of_year(2024)
+    candidates = preprocessing.get_sp500_candidates(datetime(2023, 10, 18))
+    print("Candidates found: ", len(candidates))
+    print("List of candidates: ", candidates)

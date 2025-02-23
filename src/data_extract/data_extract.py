@@ -102,7 +102,7 @@ def get_master_data_eligible_symbols() -> list[str]:
     return [str(tup[0]) for tup in rows]
 
 
-def get_market_data(symbols: list[str], end_date: datetime, past_month_included=6) -> pd.DataFrame:
+def get_aggregated_market_data(symbols: list[str], end_date: datetime, past_month_included=6) -> pd.DataFrame:
     connection = _get_connection()
     formatted_symbols = ", ".join(f"'{item}'" for item in symbols)
     # date_string =

@@ -9,7 +9,7 @@ def display_sp500_quality_of_year(year: int):
     print(f"Start quality check for year {year}.")
     date = datetime.datetime(year=year, month=12, day=31)
     sp500_stock = data_extract.get_current_sp500_list(date)
-    sp500_market_data = data_extract.get_market_data(sp500_stock, date, 11)
+    sp500_market_data = data_extract.get_aggregated_market_data(sp500_stock, date, 11)
     symbols_in_data = sp500_market_data["symbol"].nunique()
 
     ## Display basic data availability
