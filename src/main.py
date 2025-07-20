@@ -77,15 +77,18 @@ if __name__ == "__main__":
 
         # Group by symbol
     grouped = stock_data.groupby('symbol')
+    fig = plt.figure(figsize=(8, 5), num=f"SP500 changes around entry date.")
+    ax = fig.add_subplot(111)
     for symbol, group in grouped:
-        plt.plot(group['offset'], group['stock_price_rel'], linestyle='-', label=symbol)
-    plt.xlabel("Offset")
-    plt.ylabel("Relative Change")
-    plt.title("Relative Change vs Offset for Multiple Symbols")
-    plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add a horizontal line at y=0
-    plt.grid(True)
-    plt.legend()
-    plt.show()
+        ax.plot(group['offset'], group['stock_price_rel'], linestyle='-', label=symbol)
+    ax.set_xlabel("Offset")
+    ax.set_ylabel("Relative Change")
+    ax.set_title("Relative Change vs Offset for Multiple Symbols")
+    # ax.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add a horizontal line at y=0
+    ax.grid(True)
+    ax.legend()
+    plt.show(block=True)
+    plt.pause(0.1)
 
     # for symbol, group in grouped:
     #     plt.plot(group['offset'], group['stock_traded_rel'], linestyle='-', label=symbol)

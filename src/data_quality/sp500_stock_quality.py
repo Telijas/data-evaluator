@@ -36,7 +36,9 @@ def display_sp500_quality_of_year(year: int):
         ["total_order_amount", "total_stock_traded", "min_market_capitalization"]].apply(
         lambda x: (len(sp500_stock) - x.isna().sum()) / len(sp500_stock)).reset_index()
 
-    fig, ax = plt.subplots(figsize=(8, 5))
+    # fig, ax = plt.subplots(figsize=(8, 5))
+    fig = plt.figure(figsize=(8, 5), num=f"SP500 data Quality {year}")
+    ax = fig.add_subplot(111)
     ax.plot(sp500_market_data["year_month"], sp500_market_data["total_order_amount"], marker='o', linestyle='-',
             label="total_order_amount")
     ax.plot(sp500_market_data["year_month"], sp500_market_data["total_stock_traded"], marker='s', linestyle='--',
@@ -49,5 +51,6 @@ def display_sp500_quality_of_year(year: int):
     ax.set_ylim(0, 1.05)
     ax.grid(True)
     ax.legend()
-    plt.show()
+    plt.show(block=False)
+    plt.pause(0.1)
     return None
