@@ -14,6 +14,8 @@ port = 6543
 
 def extract_market_data(symbol: str, date: datetime, day_records_negative: int,
                         day_records_positive: int) -> pd.DataFrame:
+    """Returns dataframe with columns: business_date, offset, stock_price_rel, stock_traded_rel and the columns from the market_data table:\n
+     symbol, business_date, year_month, stock_price, open, close, stock_traded, order_amount, after_hours, pre_market, market_capitalization"""
     connection = _get_connection()
     upper_date = (date + timedelta(int(day_records_positive * (7 / 5) + 10))).strftime('%Y-%m-%d')
     lower_date = (date - timedelta(int(day_records_negative * (7 / 5) + 10))).strftime('%Y-%m-%d')
@@ -26,6 +28,10 @@ def extract_market_data(symbol: str, date: datetime, day_records_negative: int,
     connection.close()
 
     df['business_date'] = pd.to_datetime(df['business_date'])
+    if df.empty:
+        print("No data returned for symbol:", symbol)
+        return pd.DataFrame()
+
     reference_index = df[df['business_date'] == date].index[0]
     df['offset'] = df.index - reference_index
     df = df[(-1) * day_records_negative <= df['offset']]

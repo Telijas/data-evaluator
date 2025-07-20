@@ -41,15 +41,15 @@ def do_show_analysis():
     plt.legend()
     plt.show()
 
-    for symbol, group in grouped:
-        plt.plot(group['offset'], group['stock_traded_rel'], linestyle='-', label=symbol)
-    plt.xlabel("Offset")
-    plt.ylabel("Relative Change")
-    plt.title("Relative Change vs Offset for Multiple Symbols")
-    plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add a horizontal line at y=0
-    plt.grid(True)
-    plt.legend()
-    plt.show()
+    # for symbol, group in grouped:
+    #     plt.plot(group['offset'], group['stock_traded_rel'], linestyle='-', label=symbol)
+    # plt.xlabel("Offset")
+    # plt.ylabel("Relative Change")
+    # plt.title("Relative Change vs Offset for Multiple Symbols")
+    # plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add a horizontal line at y=0
+    # plt.grid(True)
+    # plt.legend()
+    # plt.show()
 
     print("done")
 
@@ -59,7 +59,40 @@ def do_show_analysis():
 
 
 if __name__ == "__main__":
-    # sp500_stock_quality.display_sp500_quality_of_year(2024)
-    candidates = preprocessing.get_sp500_candidates(datetime(2023, 10, 18))
+    sp500_stock_quality.display_sp500_quality_of_year(2024)
+    sp500_stock_quality.display_sp500_quality_of_year(2025)
+    check_date = datetime(2024, 7, 8)
+    candidates = preprocessing.get_sp500_candidates(check_date, 12, 0)
     print("Candidates found: ", len(candidates))
-    print("List of candidates: ", candidates)
+    # print("List of candidates: ", candidates)
+    sp500_entries = [(symbol, check_date) for symbol in candidates]
+    stock_data = pd.DataFrame()
+    stock_data: pd.DataFrame
+    for symbol, date in sp500_entries:
+        if stock_data is pd.DataFrame.empty:
+            stock_data = data_extract.extract_market_data(symbol, date, 40, 10)
+        else:
+            symbol_stock_data = data_extract.extract_market_data(symbol, date, 40, 10)
+            stock_data = pd.concat([stock_data, symbol_stock_data])
+
+        # Group by symbol
+    grouped = stock_data.groupby('symbol')
+    for symbol, group in grouped:
+        plt.plot(group['offset'], group['stock_price_rel'], linestyle='-', label=symbol)
+    plt.xlabel("Offset")
+    plt.ylabel("Relative Change")
+    plt.title("Relative Change vs Offset for Multiple Symbols")
+    plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add a horizontal line at y=0
+    plt.grid(True)
+    plt.legend()
+    plt.show()
+
+    # for symbol, group in grouped:
+    #     plt.plot(group['offset'], group['stock_traded_rel'], linestyle='-', label=symbol)
+    # plt.xlabel("Offset")
+    # plt.ylabel("Relative Change")
+    # plt.title("Relative Change vs Offset for Multiple Symbols")
+    # plt.axhline(0, color='gray', linestyle='--', linewidth=0.8)  # Add a horizontal line at y=0
+    # plt.grid(True)
+    # plt.legend()
+    # plt.show()

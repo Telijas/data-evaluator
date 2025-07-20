@@ -5,14 +5,15 @@ import pandas as pd
 
 import src.data_extract.data_extract as data_extract
 
-market_capitalization_lower_limit = 12700000000
+market_capitalization_lower_limit = 18000000000
+# market_capitalization_lower_limit = 30000000000
 monthly_shares_traded_lower_limit = 250000
 
 
 def get_sp500_master_data_candidate(date: datetime) -> list[str]:
     candidates = data_extract.get_master_data_eligible_symbols()
     candidates = list(set(candidates) - set(data_extract.get_current_sp500_list(date)))
-    return candidates
+    return sorted(candidates)
 
 
 def fetch_data(symbol: str, include_month=6):
@@ -21,6 +22,13 @@ def fetch_data(symbol: str, include_month=6):
 
 def get_sp500_candidates(date: datetime, include_month=6, tolerance=0) -> list[str]:
     eligible_symbols = get_sp500_master_data_candidate(date)
+    # eligible_symbols = ['SW', 'ALNY', 'APO', 'ARES', 'ATVI', 'BCE', 'BMRN', 'BSY', 'BUD', 'CCEP', 'CHKP', 'CM', 'CP',
+    #                     'CPNG', 'CQP', 'CVE', 'DASH', 'DB', 'DDOG', 'DELL', 'EC', 'FCNCA', 'FLT', 'FWONA', 'FWONK',
+    #                     'GFS', 'GIB', 'GLD', 'HEI', 'HUBS', 'ICLR', 'ILMN', 'IMO', 'LNG', 'LPLA', 'MBLY', 'MDB', 'MELI',
+    #                     'MFC', 'MGA', 'MKL', 'MRVL', 'NET', 'NU', 'PINS', 'PKI', 'PLTR', 'PXD', 'RBLX', 'RCI', 'RS',
+    #                     'SCCO', 'SE', 'SIRI', 'SNOW', 'SPLK', 'SPOT', 'SQ', 'SUI', 'TEAM', 'TTD', 'TW', 'VEEV', 'VO',
+    #                     'WDAY', 'WLK', 'YUMC', 'ZM', 'ZS']
+
     with ThreadPoolExecutor() as executor:
         list_sp500_el = list(executor.map(fetch_data, eligible_symbols, [include_month] * len(eligible_symbols)))
     sp500_list = pd.concat(list_sp500_el, ignore_index=True)
